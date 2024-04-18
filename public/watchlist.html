@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Watchlist</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        .main {
+            background-color: #ececec;
+            min-height: 100vh;
+            color: black;
+            font-family: "Roboto", sans-serif;
+            padding: 30px;
+        }
+
+        .rl-title {
+            font-size: 40px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .card {
+            background-color: rgb(34, 34, 34);
+            box-shadow: 5px 5px 10px rgba(54, 54, 54, 0.7);
+            color: white;
+            border-radius: 20px;
+            margin: 10px;
+            height: 200px;
+            width: 90%;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .card img {
+            max-height: 200px;
+            object-fit: contain;
+        }
+
+        .card-subtitle {
+            font-size: 18px;
+            color: rgb(148, 148, 148);
+        }
+
+        .card-text {
+            font-size: 16px;
+        }
+
+        .btn {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .btn:hover {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <h1 class="rl-title">Your Watchlist</h1>
+
+        <div class="container">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="#" target="_blank">
+                            <img src="" class="card-img-top" alt="Movie Image">
+                        </a>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card-body">
+                            <h5 class="card-title">Title </h5>
+                            <p class="card-subtitle mb-2">
+                                <strong>Director</strong>
+                            </p>
+                            <button class="btn btn-primary">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Genre Search</title>
+  <style>
+    /* CSS styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .form-select {
+      padding: 5px 10px;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+
+    .container {
+      margin-top: 20px;
+    }
+
+    .card {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .card-img-top {
+      width: 150px;
+      height: 225px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      padding: 8px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="explore-header">
+      <div class="genre-dropdown">
+        <label for="genre-select" class="title">Select a Genre:</label>
+        <select class="form-select" id="genre-select">
+          <option value="">-- Select Genre --</option>
+          <option value="28">Action</option>
+          <option value="12">Adventure</option>
+          <option value="16">Animation</option>
+          <option value="35">Comedy</option>
+          <option value="80">Crime</option>
+          <option value="99">Documentary</option>
+          <option value="18">Drama</option>
+          <option value="10751">Family</option>
+          <option value="14">Fantasy</option>
+          <option value="36">History</option>
+          <option value="27">Horror</option>
+          <option value="10402">Music</option>
+          <option value="9648">Mystery</option>
+          <option value="10749">Romance</option>
+          <option value="878">Science Fiction</option>
+          <option value="10770">TV Movie</option>
+          <option value="53">Thriller</option>
+          <option value="10752">War</option>
+          <option value="37">Western</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="movieListContainer" class="container"></div>
+
+    <div class="more">
+      <button id="loadMoreBtn" class="btn">More</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript code
+    const apiUrl = 'https://api.themoviedb.org/3';
+    const apiKey = 'ebf6b563a2f76a0c355d5c4bedacd078';
+    let currentPage = 1;
+    let selectedGenre = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      populateGenreDropdown();
+    });
+
+    function populateGenreDropdown() {
+      const genreDropdown = document.getElementById("genre-select");
+      const genres = [
+        { id: 28, name: 'Action' },
+        { id: 12, name: 'Adventure' },
+        { id: 16, name: 'Animation' },
+        { id: 35, name: 'Comedy' },
+        { id: 80, name: 'Crime' },
+        { id: 99, name: 'Documentary' },
+        { id: 18, name: 'Drama' },
+        { id: 10751, name: 'Family' },
+        { id: 14, name: 'Fantasy' },
+        { id: 36, name: 'History' },
+        { id: 27, name: 'Horror' },
+        { id: 10402, name: 'Music' },
+        { id: 9648, name: 'Mystery' },
+        { id: 10749, name: 'Romance' },
+        { id: 878, name: 'Science Fiction' },
+        { id: 10770, name: 'TV Movie' },
+        { id: 53, name: 'Thriller' },
+        { id: 10752, name: 'War' },
+        { id: 37, name: 'Western' }
+      ];
+
+      genres.forEach(genre => {
+        genreDropdown.innerHTML += `<option value="${genre.id}">${genre.name}</option>`;
+      });
+    }
+
+    function loadMovies() {
+      selectedGenre = document.getElementById("genre-select").value;
+      if (!selectedGenre) {
+        alert("Please select a genre.");
+        return;
+      }
+
+      const movieListContainer = document.getElementById("movieListContainer");
+      movieListContainer.innerHTML = '';
+
+      fetch(`${apiUrl}/discover/movie?with_genres=${selectedGenre}&api_key=${apiKey}&page=${currentPage}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.results.length === 0) {
+            alert("No movies found for the selected genre.");
+            return;
+          }
+          data.results.forEach(movie => {
+            const movieCard = document.createElement('div');
+            movieCard.classList.add('card');
+            movieCard.innerHTML = `
+              <div class="row">
+                <div class="col-md-3">
+                  <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" class="card-img-top" alt="Movie Image">
+                </div>
+                <div class="col-md-9">
+                  <div class="card-body">
+                    <h5 class="card-title">Title: ${movie.title}</h5>
+                    <p class="card-subtitle mb-2">
+                      <strong>Genre: ${movie.genre_ids.join(', ')}</strong><br>
+                      <strong>Rating: ${movie.vote_average}</strong><br>
+                      <strong>Plot: ${movie.overview}</strong><br>
+                    </p>
+                    <button class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+              </div>
+            `;
+            movieListContainer.appendChild(movieCard);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error.message);
+          alert("Error: " + error.message);
+        });
+    }
+
+    document.getElementById("loadMoreBtn").addEventListener("click", function () {
+      currentPage++;
+      loadMovies();
+    });
+
+    document.getElementById("genre-select").addEventListener("change", function () {
+      currentPage = 1;
+      loadMovies();
+    });
+  </script>
+</body>
+</html>
