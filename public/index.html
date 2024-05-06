@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login Page</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-<!-- Bootstrap Icons CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 <style>
 .wrapper {
@@ -327,48 +326,51 @@
                 window.location.href = "/home.html";
             });
         });
-        const cloudantUrl = "https://apikey-v2-182sso54wjwbhfsn4vutlvd52tohwxm5tr5neu0vzjf8.cloudant.com"; // Replace with your Cloudant URL
-        const apiKey = "0swPY10yLSTBHtK2NOykA_AHQuzElNsmL5eKIVDiNU3b"; // Replace with your Cloudant API key
-        const databaseName = "users"; // Replace with your Cloudant database name
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const signupForm = document.getElementById("signup-form");
+            const signinForm = document.getElementById("signin-form");
 
-        const signupForm = document.getElementById("signup-form");
-
-        signupForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
-        const name = document.getElementById("signup-name").value;
-        const email = document.getElementById("signup-email").value;
-        const password = document.getElementById("signup-password").value;
-
-        const data = {
-            name,
-            email,
-            password, // You might want to hash the password before storing it in the database for security reasons
-        };
-
-        try {
-            const response = await fetch(`${cloudantUrl}/${databaseName}`, {
-            method: "POST",
-            headers: {
-                Authorization: `Basic ${btoa(`${apiKey}:`)}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
+            signupForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const formData = new FormData(signupForm);
+                fetch('/signup', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('User created successfully');
+                        // Redirect to sign-in page or perform other actions
+                    } else {
+                        alert('Error creating user');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             });
 
-            if (response.ok) {
-            const data = await response.json();
-            console.log("Data inserted successfully:", data);
-            // Clear the form after successful submission (optional)
-            signupForm.reset();
-            } else {
-            console.error("Error inserting data:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
+            signinForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const formData = new FormData(signinForm);
+                fetch('/signin', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Sign in successful');
+                        // Redirect to home page or perform other actions
+                    } else {
+                        alert('Invalid email or password');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
         });
-
     </script>
 </body>
 </html>
