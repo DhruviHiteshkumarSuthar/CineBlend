@@ -133,6 +133,64 @@
       background-color:rgb(255, 82, 82);
       color: #e5e5e5;
     }
+
+    .trending {
+    padding: 50px;
+    background-color: rgb(34, 34, 34);
+}
+
+.trending h1 {
+    font-family: roboto;
+    font-weight: 600;
+    font-size: 50px;
+    margin-bottom: 75px;
+    color:rgb(255, 255, 255);
+    border-bottom: 4px solid;
+    border-image: linear-gradient(to left, #ff9292, #723d3d) 1;
+    width:fit-content;
+}
+
+.card {
+    color: white;
+    display: inline-block;
+    width: 400px;
+    margin-right: 50px;
+    margin-bottom: 50px;
+    font-family: roboto;
+    background-color: rgb(48, 48, 48);
+    min-height: 300px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+} 
+
+
+.card:hover {
+    transform: scale(1.025);
+}
+
+.card-img-top{
+    margin-top: 25px;
+    height:400px;
+    object-fit:contain;
+
+}
+
+.card-title {
+    text-transform: uppercase;
+    font-size: 25px;
+    color: white;
+}
+
+.author {
+    font-size: 17px;
+    color: rgb(179, 177, 177);
+    padding-bottom: 20px;
+}
+
+.card-text {
+    font-size: 17px;
+    font-weight: 300;
+}
   </style>
 </head>
 <body>
@@ -210,8 +268,79 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+  <div class="trending">
+    <h1>Trending Choices</h1>
+    <div class="row text-center row-cols-1 row-cols-md-2 row-cols-lg-3" id="trendingContainer">
+    </div>
+</div>
 
   <!-- Bootstrap JavaScript Bundle (bootstrap.bundle.min.js) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Define a function to fetch trending movies
+function fetchTrendingmovies() {
+    return [
+        {
+            title: "Kung Fu Panda 4",
+            director: "Mike Mitchell",
+            coverImg: "m1.jpg",
+        },
+        {
+            title: "The Fall Guy",
+            director: "David Leitch",
+            coverImg: "m2.jpg",
+        },
+        {
+            title: "Dune: Part Two",
+            director: "Denis Villeneuve",
+            coverImg: "m3.jpg",
+        },
+        {
+            title: "Queen of Tears",
+            director: "Jang Young-woo; Kim Hee-won",
+            coverImg: "m4.jpg",
+        },
+        {
+            title: "Vicenzo",
+            director: "Kim Hee-won",
+            coverImg: "m5.jpg",
+        },
+        {
+            title: "It's okay to be not okay",
+            director: "Park Shin Woo",
+            coverImg: "m6.jpg",
+        }
+    ];
+}
+
+// Function to render trending movies
+function renderTrendingmovies() {
+    const trendingmovies = fetchTrendingmovies();
+    const container = document.getElementById('trendingContainer');
+
+    // Clear existing content
+    container.innerHTML = '';
+
+    // Iterate over trending movies and create HTML elements
+    trendingmovies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'col mb-4';
+        card.innerHTML = `
+            <div class="card">
+                <img src="${movie.coverImg}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">${movie.title}</h5>
+                    <h6 class="card-subtitle mb-2 author">${movie.director}</h6>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// Call the render function when the page loads
+window.onload = renderTrendingmovies;
+
+  </script>
 </body>
 </html>
