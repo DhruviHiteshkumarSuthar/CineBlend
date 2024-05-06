@@ -249,7 +249,7 @@
     <div class="wrapper">
         <div class="container">
             <div class="form-container sign-up">
-                <form id="signup-form">
+                <form id="signup-form" action="/signup" method="post">
                     <h1>Create Account</h1>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="bi-google"></i></a>
@@ -306,7 +306,7 @@
             const container = document.querySelector(".container");
             const toggleSignin = document.getElementById("toggle-signin");
             const toggleSignup = document.getElementById("toggle-signup");
-            const Signinbtn = document.getElementById("signin-btn")
+            const Signinbtn = document.getElementById("signin-btn");
 
             function toggleContainer() {
                 container.classList.toggle("active");
@@ -327,6 +327,48 @@
                 window.location.href = "/home.html";
             });
         });
+        const cloudantUrl = "https://apikey-v2-182sso54wjwbhfsn4vutlvd52tohwxm5tr5neu0vzjf8.cloudant.com"; // Replace with your Cloudant URL
+        const apiKey = "0swPY10yLSTBHtK2NOykA_AHQuzElNsmL5eKIVDiNU3b"; // Replace with your Cloudant API key
+        const databaseName = "users"; // Replace with your Cloudant database name
+
+        const signupForm = document.getElementById("signup-form");
+
+        signupForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const name = document.getElementById("signup-name").value;
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+
+        const data = {
+            name,
+            email,
+            password, // You might want to hash the password before storing it in the database for security reasons
+        };
+
+        try {
+            const response = await fetch(`${cloudantUrl}/${databaseName}`, {
+            method: "POST",
+            headers: {
+                Authorization: `Basic ${btoa(`${apiKey}:`)}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+            const data = await response.json();
+            console.log("Data inserted successfully:", data);
+            // Clear the form after successful submission (optional)
+            signupForm.reset();
+            } else {
+            console.error("Error inserting data:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+        });
+
     </script>
 </body>
 </html>
