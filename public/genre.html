@@ -114,7 +114,7 @@
  
     /* CSS styles */
     body {
-      font-family: Arial, sans-serif;
+      font-family: Roboto,Arial, sans-serif;
       background-color: #f4f4f4;
       margin: 0;
       padding: 0;
@@ -145,11 +145,15 @@
       display: flex;
       margin-bottom: 20px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background-color:rgb(61, 61, 61) ;
+      color:white;
+      box-shadow: 5px 5px 10px rgba(54, 54, 54, 0.7);
       overflow: hidden;
     }
 
     .card-img-top {
+      padding-top: 20px;
+      padding-left: 20px;
       width: 150px;
       height: 225px;
       object-fit: cover;
@@ -160,31 +164,57 @@
     }
 
     .card-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
+      color: rgb(255, 255, 255);
+      font-size: 24px;
+      font-weight: 500;
     }
 
     .card-subtitle {
+      font-weight: 200;
       font-size: 16px;
-      color: #555;
-      margin-bottom: 10px;
+      color:rgb(163, 163, 163);
     }
 
     .btn {
-      padding: 8px 20px;
+      outline:none;
+      width:20%;
+      text-align: center;
+      background-color:transparent;
+      border: 2px solid #eeeeee;
+      color: #eeeeee;
+      padding: 7px 20px;
       font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: #fff;
       cursor: pointer;
-      transition: background-color 0.3s;
+      border-radius: 10px;
+      transition: all 0.15s ease-in-out;
     }
-
     .btn:hover {
-      background-color: #0056b3;
+      outline:none;
+      background-color:#eeeeee;
+     color:black;
     }
+    .more-btn{
+    width:40%;
+    text-align: center;
+    background-color:transparent;
+    border: 2px solid black;
+    color: black;
+    padding: 7px 20px;
+    margin-left: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.15s ease-in-out;
+    
+  }
+  .more-btn:hover{
+    background-color: rgb(41, 41, 41);
+    color:#dfdfdf;
+  }
+  .more {
+    display: flex;
+    justify-content: center;
+  }
   </style>
 </head>
 <body>
@@ -248,7 +278,7 @@
     <div id="movieListContainer" class="container"></div>
 
     <div class="more">
-      <button id="loadMoreBtn" class="btn">More</button>
+      <button id="loadMoreBtn" class="more-btn">More</button>
     </div>
   </div>
 
@@ -330,7 +360,7 @@
                       <strong>Rating: ${movie.vote_average}</strong><br>
                       <strong>Plot: ${movie.overview}</strong><br>
                     </p>
-                    <button class="btn btn-primary">Add</button>
+                    <button class="btn">Add</button>
                   </div>
                 </div>
               </div>
