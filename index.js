@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 
 app.post('/signup', (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, upassword } = req.body;
 
   // Initialize Cloudant
   const cloudant = Cloudant({ url: url, username: username, password: password });
@@ -38,13 +38,13 @@ app.post('/signup', (req, res) => {
   const usersDB = cloudant.use('users');
 
   // Check if the email already exists
-  usersDB.get(email,password, (err, body) => {
+  usersDB.get(email, (err, body) => {
     if (!err) {
       // Email already exists
       res.status(400).send('Email already exists');
     } else {
       // Email does not exist, create new user
-      usersDB.insert({ _id: email, name: name, password: password }, (err, body) => {
+      usersDB.insert({ _id: email, name: name, upassword: upassword }, (err, body) => {
         if (err) {
           res.status(500).send('Error creating user');
         } else {
@@ -56,7 +56,7 @@ app.post('/signup', (req, res) => {
 });
 
 app.post('/signin', (req, res) => {
-  const { email, password } = req.body;
+  const { email, upassword } = req.body;
 
   // Initialize Cloudant
   const cloudant = Cloudant({ url: url, username: username, password: password });
