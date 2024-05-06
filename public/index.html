@@ -273,7 +273,8 @@
                     <input type="email" placeholder="Email" id="signin-email">
                     <input type="password" placeholder="Password" id="signin-password">
                     <a href="#" id="forgot-password">Forgot Your Password?</a>
-                    <button class="submit-btn" id="signin-btn">Sign In</button>
+                    <!-- <button class="submit-btn" id="signin-btn">Sign In</button> -->
+                    <a href="#" id="signin-btn"><button class="submit-btn">Sign In</button></a>
                 </form>
             </div>
             <div class="toggle-container">
@@ -282,13 +283,15 @@
                         <img class="logo" src="4.png" alt="CineBlend Logo">
                         <h1>Welcome To CineBlend</h1>
                         <p>Already have an account? Sign in now!</p>
-                        <a href="/home"><button class="hidden togglebtn" id="toggle-signin">Sign In</button></a>
+                        <!-- <a href="/home"><button class="hidden togglebtn" id="toggle-signin">Sign In</button></a> -->
+                        <a href="#" id="toggle-signin"><button class="hidden togglebtn">Sign In</button></a>
                     </div>
                     <div class="toggle-panel toggle-right">
                         <img class="logo" src="4.png" alt="CineBlend Logo">
                         <h1>Welcome Back</h1>
                         <p>Don't have an account? Sign up now!</p>
-                        <button href="/home" class="hidden togglebtn" id="toggle-signup">Sign Up</button>
+                        <!-- <button href="/home" class="hidden togglebtn" id="toggle-signup">Sign Up</button> -->
+                        <a href="#" id="toggle-signup"><button class="hidden togglebtn">Sign Up</button></a>
                     </div>
                 </div>
             </div>
@@ -303,6 +306,7 @@
             const container = document.querySelector(".container");
             const toggleSignin = document.getElementById("toggle-signin");
             const toggleSignup = document.getElementById("toggle-signup");
+            const Signinbtn = document.getElementById("signin-btn")
 
             function toggleContainer() {
                 container.classList.toggle("active");
@@ -316,6 +320,11 @@
             toggleSignup.addEventListener("click", function(event) {
                 event.preventDefault();
                 toggleContainer();
+            });
+
+            Signinbtn.addEventListener("click", function(event) {
+                event.preventDefault();
+                window.location.href = "/home.html";
             });
         });
     </script>
