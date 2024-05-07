@@ -246,9 +246,10 @@
             <span id="nameDisplay"></span>
           </div>
           <div class="wish-list">
-            <a  href="watchlist.html">
+            <a  id="watchlistlink" href="watchlist.html">
             <i class="bi-heart-fill" aria-hidden="true"></i>
           </a>
+          </div>
           </div>
         </div>
       </div>
@@ -296,6 +297,31 @@
     const apiKey = 'ebf6b563a2f76a0c355d5c4bedacd078';
     let currentPage = 1;
     let selectedGenre = null;
+    const genreMap = {
+      28: 'Action',
+      12: 'Adventure',
+      16: 'Animation',
+      35: 'Comedy',
+      80: 'Crime',
+      99: 'Documentary',
+      18: 'Drama',
+      10751: 'Family',
+      14: 'Fantasy',
+      36: 'History',
+      27: 'Horror',
+      10402: 'Music',
+      9648: 'Mystery',
+      10749: 'Romance',
+      878: 'Science Fiction',
+      10770: 'TV Movie',
+      53: 'Thriller',
+      10752: 'War',
+      37: 'Western'
+    };
+
+    function getGenreNames(genreIds) {
+      return genreIds.map(id => genreMap[id]);
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
       populateGenreDropdown();
@@ -364,11 +390,11 @@
                   <div class="card-body">
                     <h5 class="card-title">Title: ${movie.title}</h5>
                     <p class="card-subtitle mb-2">
-                      <strong>Genre: ${movie.genre_ids.join(', ')}</strong><br>
+                      <strong>Genre: ${getGenreNames(movie.genre_ids).join(', ')}</strong><br>
                       <strong>Rating: ${movie.vote_average}</strong><br>
                       <strong>Plot: ${movie.overview}</strong><br>
                     </p>
-                    <button class="btn">Add</button>
+                    <button class="btn" onclick="addToWishlist('${movie.title}', '${getGenreNames(movie.genre_ids).join(', ')}', '${movie.poster_path}')">Add</button>
                   </div>
                 </div>
               </div>
@@ -429,6 +455,47 @@ document.getElementById('aboutuslink').addEventListener('click', function(event)
     event.preventDefault();
     redirectToPage('aboutus.html');
 });
+
+document.getElementById('watchlistlink').addEventListener('click', function(event) {
+    event.preventDefault();
+    redirectToPage('watchlist.html');
+});
+
+function addToWishlist(title, genre, posterPath) {
+      const name = document.getElementById('nameDisplay').textContent;
+
+      if (!name) {
+          alert("Please provide a name.");
+          return;
+      }
+
+      const movieData = {
+          title: title,
+          genre: genre,
+          image: `https://image.tmdb.org/t/p/w500${posterPath}`,
+          userName: name
+      };
+
+      // Send a POST request to your Cloudant database API endpoint to add the movie to the wishlist
+      fetch('/wishlist', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(movieData)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Failed to add movie to watchlist.');
+          }
+          alert('Movie added to watchlist successfully!');
+      })
+      .catch(error => {
+          console.error('Error:', error.message);
+          alert('Error adding movie to watchlist: ' + error.message);
+      });
+  }
+
   </script>
 </body>
 </html>

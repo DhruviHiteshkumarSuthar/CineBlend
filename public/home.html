@@ -217,7 +217,7 @@
             <span id="nameDisplay"></span>
           </div>
           <div class="wish-list">
-            <a  href="watchlist.html">
+            <a  id="watchlistlink" href="watchlist.html">
             <i class="bi-heart-fill" aria-hidden="true"></i>
           </a>
           </div>
@@ -379,7 +379,10 @@ document.getElementById('aboutuslink').addEventListener('click', function(event)
     redirectToPage('aboutus.html');
 });
 
-
+document.getElementById('watchlistlink').addEventListener('click', function(event) {
+    event.preventDefault();
+    redirectToPage('watchlist.html');
+});
   </script>
 </body>
 </html>
