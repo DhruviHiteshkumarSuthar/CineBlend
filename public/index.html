@@ -248,17 +248,17 @@
     <div class="wrapper">
         <div class="container">
             <div class="form-container sign-up">
-                <form id="signup-form" action="/signup" method="post">
+                <form id="signup-form">
                     <h1>Create Account</h1>
                     <div class="social-icons">
                         <a href="#" class="icon"><i class="bi-google"></i></a>
                         <a href="#" class="icon"><i class="bi-facebook"></i></a>
                     </div>
                     <span>or use your email for registration</span>
-                    <input type="text" placeholder="Name" id="signup-name">
-                    <input type="email" placeholder="Email" id="signup-email">
-                    <input type="password" placeholder="Password" id="signup-password">
-                    <button class="submit-btn" id="signup-btn">Sign Up</button>
+                    <input type="text" placeholder="Name" id="signup-name" name="name">
+                    <input type="email" placeholder="Email" id="signup-email" name="email">
+                    <input type="password" placeholder="Password" id="signup-password" name="upassword">
+                    <button type="submit" class="submit-btn" id="signup-btn">Sign Up</button>
                 </form>
             </div>
             <div class="form-container sign-in">
@@ -269,11 +269,10 @@
                         <a href="#" class="icon"><i class="bi-facebook"></i></a>
                     </div>
                     <span>or use your email and password</span>
-                    <input type="email" placeholder="Email" id="signin-email">
-                    <input type="password" placeholder="Password" id="signin-password">
+                    <input type="email" placeholder="Email" id="signin-email" name="email">
+                    <input type="password" placeholder="Password" id="signin-password" name="upassword">
                     <a href="#" id="forgot-password">Forgot Your Password?</a>
-                    <!-- <button class="submit-btn" id="signin-btn">Sign In</button> -->
-                    <a href="#" id="signin-btn"><button class="submit-btn">Sign In</button></a>
+                    <button type="submit" class="submit-btn" id="signin-btn">Sign In</button>
                 </form>
             </div>
             <div class="toggle-container">
@@ -282,14 +281,12 @@
                         <img class="logo" src="4.png" alt="CineBlend Logo">
                         <h1>Welcome To CineBlend</h1>
                         <p>Already have an account? Sign in now!</p>
-                        <!-- <a href="/home"><button class="hidden togglebtn" id="toggle-signin">Sign In</button></a> -->
                         <a href="#" id="toggle-signin"><button class="hidden togglebtn">Sign In</button></a>
                     </div>
                     <div class="toggle-panel toggle-right">
                         <img class="logo" src="4.png" alt="CineBlend Logo">
                         <h1>Welcome Back</h1>
                         <p>Don't have an account? Sign up now!</p>
-                        <!-- <button href="/home" class="hidden togglebtn" id="toggle-signup">Sign Up</button> -->
                         <a href="#" id="toggle-signup"><button class="hidden togglebtn">Sign Up</button></a>
                     </div>
                 </div>
@@ -323,20 +320,27 @@
 
             Signinbtn.addEventListener("click", function(event) {
                 event.preventDefault();
-                window.location.href = "/home.html";
+                // window.location.href = "/home.html";
             });
-        });
-        
-        document.addEventListener("DOMContentLoaded", function() {
+
             const signupForm = document.getElementById("signup-form");
             const signinForm = document.getElementById("signin-form");
 
             signupForm.addEventListener("submit", function(event) {
                 event.preventDefault();
                 const formData = new FormData(signupForm);
+                const jsonData = {};
+                    for (const [key, value] of formData.entries()) {
+                        jsonData[key] = value;
+                    }
+                console.log(jsonData);
                 fetch('/signup', {
                     method: 'POST',
-                    body: formData
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body: JSON.stringify(jsonData),
+                    
                 })
                 .then(response => {
                     if (response.ok) {
@@ -356,7 +360,11 @@
                 const formData = new FormData(signinForm);
                 fetch('/signin', {
                     method: 'POST',
-                    body: formData
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body: JSON.stringify(jsonData),
+                    
                 })
                 .then(response => {
                     if (response.ok) {
