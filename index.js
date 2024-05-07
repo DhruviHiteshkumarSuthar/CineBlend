@@ -1,77 +1,78 @@
-var express = require('express');
-var app = express();
+const express = require('express');
 const bodyParser = require('body-parser');
+const Cloudant = require('@cloudant/cloudant');
+
+const app = express();
+const PORT = process.env.PORT || 8000;
+const url = "https://apikey-v2-2e5kdlgplmovp6jb5xfuok6afjra827zegiyhiw2ul1u:d32ec5f34b80eec562777356d8d80d1b@b9884815-a388-4e5e-8d1d-784e73de0044-bluemix.cloudantnosqldb.appdomain.cloud";
+const username = "apikey-v2-2e5kdlgplmovp6jb5xfuok6afjra827zegiyhiw2ul1u";
+const password = "d32ec5f34b80eec562777356d8d80d1b";
+
 app.use(bodyParser.json());
-var PORT;
-var Cloudant = require('@cloudant/cloudant');
-
-if (process.env.PORT) {
-  PORT = process.env.PORT;
-} else {
-  PORT = 8000;
-}
-
-var url = "https://apikey-v2-182sso54wjwbhfsn4vutlvd52tohwxm5tr5neu0vzjf8:ef898583465dfc2b6ae676f89dbe74ca@fda58982-1434-460f-8929-dfc3615c3c07-bluemix.cloudantnosqldb.appdomain.cloud";
-var username = "apikey-v2-182sso54wjwbhfsn4vutlvd52tohwxm5tr5neu0vzjf8";
-var password = "ef898583465dfc2b6ae676f89dbe74ca";
-
-
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
+
 app.post('/signup', (req, res) => {
-  const {name, email, upassword} = req.body;
-  const name1=req.body.name;
-  const name2=req.body['name'];
-  console.log(name1, name2);
-  console.log('Received data:', name, email, upassword);
+  const { name, email, upassword } = req.body;
 
   const cloudant = Cloudant({ url: url, username: username, password: password });
-
-  // Access or create the 'users' database
   const usersDB = cloudant.use('users');
-  
-  // Check if the email already exists
-  usersDB.get(email, (err) => {
-    if (!err) {
+
+  usersDB.get(email, (err, body) => {
+    if (!err && body) {
       // Email already exists
+      console.log('Email already exists:', email);
       res.status(400).send('Email already exists');
     } else {
-      // Email does not exist, create new user
-      usersDB.insert({ _id:email, name: name, upassword: upassword }, (err) => {
-        if (err) {
-          res.status(500).send('Error creating user');
-        } else {
-          res.status(200).send('User created successfully');
-        }
-      });
+      if (err && err.statusCode === 404) {
+        // Email does not exist, create new user
+        const newUser = { _id: email, name: name, upassword: upassword };
+        usersDB.insert(newUser, (err, result) => {
+          if (err) {
+            console.error('Error creating user:', err);
+            res.status(500).send('Error creating user');
+          } else {
+            console.log('User created successfully:', email);
+            res.status(200).send('User created successfully');
+          }
+        });
+      } else {
+        console.error('Error getting user:', err);
+        res.status(500).send('Error checking existing user');
+      }
     }
   });
 });
 
 app.post('/signin', (req, res) => {
   const { email, upassword } = req.body;
-  console.log(email,upassword);
-  // Initialize Cloudant
-  const cloudant = Cloudant({ url: url, username: username, password: password });
 
-  // Access the 'users' database
+  const cloudant = Cloudant({ url: url, username: username, password: password });
   const usersDB = cloudant.use('users');
 
-  // Get user details by email
   usersDB.get(email, (err, body) => {
-    if (err) {
-      res.status(400).send('Invalid email or password');
-    } else {
-      // Check if passwords match
-      if (body.upassword === upassword) {
-        res.status(200).send('Sign in successful');
+      if (!err && body) {
+          // User found, check password
+          if (body.upassword === upassword) {
+              console.log('Sign in successful:', email);
+              res.status(200).send('Sign in successful');
+          } else {
+              console.log('Invalid password:', email);
+              res.status(400).send('Invalid email or password');
+          }
       } else {
-        res.status(400).send('Invalid email or password');
+          if (err && err.statusCode === 404) {
+              // User not found
+              console.error('User not found:', email);
+              res.status(400).send('User not found');
+          } else {
+              console.error('Error getting user:', err);
+              res.status(500).send('Error checking user');
+          }
       }
-    }
   });
 });
 

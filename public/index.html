@@ -302,7 +302,6 @@
             const container = document.querySelector(".container");
             const toggleSignin = document.getElementById("toggle-signin");
             const toggleSignup = document.getElementById("toggle-signup");
-            const Signinbtn = document.getElementById("signin-btn");
 
             function toggleContainer() {
                 container.classList.toggle("active");
@@ -316,11 +315,6 @@
             toggleSignup.addEventListener("click", function(event) {
                 event.preventDefault();
                 toggleContainer();
-            });
-
-            Signinbtn.addEventListener("click", function(event) {
-                event.preventDefault();
-                // window.location.href = "/home.html";
             });
 
             const signupForm = document.getElementById("signup-form");
@@ -340,13 +334,16 @@
                         'Content-Type':'application/json'
                     },
                     body: JSON.stringify(jsonData),
-                    
                 })
                 .then(response => {
                     if (response.ok) {
                         alert('User created successfully');
                         // Redirect to sign-in page or perform other actions
+                    } else if (response.status === 400) {
+                        // Email already exists
+                        alert('Email already exists');
                     } else {
+                        // Other error (e.g., server error)
                         alert('Error creating user');
                     }
                 })
@@ -358,20 +355,27 @@
             signinForm.addEventListener("submit", function(event) {
                 event.preventDefault();
                 const formData = new FormData(signinForm);
+                const jsonData = {};
+                for (const [key, value] of formData.entries()) {
+                    jsonData[key] = value;
+                }
                 fetch('/signin', {
                     method: 'POST',
                     headers:{
                         'Content-Type':'application/json'
                     },
                     body: JSON.stringify(jsonData),
-                    
                 })
                 .then(response => {
                     if (response.ok) {
                         alert('Sign in successful');
-                        // Redirect to home page or perform other actions
-                    } else {
+                        window.location.href = "/home.html";
+                    } else if (response.status === 400) {
                         alert('Invalid email or password');
+                    } else if (response.status === 404) {
+                        alert('User not found');
+                    } else {
+                        alert('Error checking user');
                     }
                 })
                 .catch(error => {
