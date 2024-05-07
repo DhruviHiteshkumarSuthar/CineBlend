@@ -269,7 +269,7 @@
                         <a href="#" class="icon"><i class="bi-facebook"></i></a>
                     </div>
                     <span>or use your email and password</span>
-                    <input type="email" placeholder="Email" id="signin-email" name="email">
+                    <input type="text" placeholder="Name" id="signin-name" name="name">
                     <input type="password" placeholder="Password" id="signin-password" name="upassword">
                     <a href="#" id="forgot-password">Forgot Your Password?</a>
                     <button type="submit" class="submit-btn" id="signin-btn">Sign In</button>
@@ -302,32 +302,31 @@
             const container = document.querySelector(".container");
             const toggleSignin = document.getElementById("toggle-signin");
             const toggleSignup = document.getElementById("toggle-signup");
-
+    
             function toggleContainer() {
                 container.classList.toggle("active");
             }
-
+    
             toggleSignin.addEventListener("click", function(event) {
                 event.preventDefault();
                 toggleContainer();
             });
-
+    
             toggleSignup.addEventListener("click", function(event) {
                 event.preventDefault();
                 toggleContainer();
             });
-
+    
             const signupForm = document.getElementById("signup-form");
             const signinForm = document.getElementById("signin-form");
-
+    
             signupForm.addEventListener("submit", function(event) {
                 event.preventDefault();
                 const formData = new FormData(signupForm);
                 const jsonData = {};
-                    for (const [key, value] of formData.entries()) {
-                        jsonData[key] = value;
-                    }
-                console.log(jsonData);
+                for (const [key, value] of formData.entries()) {
+                    jsonData[key] = value;
+                }
                 fetch('/signup', {
                     method: 'POST',
                     headers:{
@@ -351,7 +350,7 @@
                     console.error('Error:', error);
                 });
             });
-
+    
             signinForm.addEventListener("submit", function(event) {
                 event.preventDefault();
                 const formData = new FormData(signinForm);
@@ -369,7 +368,7 @@
                 .then(response => {
                     if (response.ok) {
                         alert('Sign in successful');
-                        window.location.href = "/home.html";
+                        window.location.href = `/home.html?name=${jsonData.name}`;
                     } else if (response.status === 400) {
                         alert('Invalid email or password');
                     } else if (response.status === 404) {

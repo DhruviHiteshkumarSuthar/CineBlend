@@ -21,21 +21,21 @@ app.post('/signup', (req, res) => {
   const cloudant = Cloudant({ url: url, username: username, password: password });
   const usersDB = cloudant.use('users');
 
-  usersDB.get(email, (err, body) => {
+  usersDB.get(name, (err, body) => {
     if (!err && body) {
       // Email already exists
-      console.log('Email already exists:', email);
+      console.log('Name already exists:', name);
       res.status(400).send('Email already exists');
     } else {
       if (err && err.statusCode === 404) {
         // Email does not exist, create new user
-        const newUser = { _id: email, name: name, upassword: upassword };
+        const newUser = { _id: name, email: email, upassword: upassword };
         usersDB.insert(newUser, (err, result) => {
           if (err) {
             console.error('Error creating user:', err);
             res.status(500).send('Error creating user');
           } else {
-            console.log('User created successfully:', email);
+            console.log('User created successfully:', name);
             res.status(200).send('User created successfully');
           }
         });
@@ -48,25 +48,25 @@ app.post('/signup', (req, res) => {
 });
 
 app.post('/signin', (req, res) => {
-  const { email, upassword } = req.body;
+  const { name, upassword } = req.body;
 
   const cloudant = Cloudant({ url: url, username: username, password: password });
   const usersDB = cloudant.use('users');
 
-  usersDB.get(email, (err, body) => {
+  usersDB.get(name, (err, body) => {
       if (!err && body) {
           // User found, check password
           if (body.upassword === upassword) {
-              console.log('Sign in successful:', email);
-              res.status(200).send('Sign in successful');
+              console.log('Sign in successful:', name);
+              res.redirect(`/home.html?name=${name}`);
           } else {
-              console.log('Invalid password:', email);
+              console.log('Invalid password:', name);
               res.status(400).send('Invalid email or password');
           }
       } else {
           if (err && err.statusCode === 404) {
               // User not found
-              console.error('User not found:', email);
+              console.error('User not found:', name);
               res.status(400).send('User not found');
           } else {
               console.error('Error getting user:', err);
@@ -75,6 +75,7 @@ app.post('/signin', (req, res) => {
       }
   });
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
